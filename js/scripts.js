@@ -11,11 +11,16 @@ let pokemonRepository = (function () {
     }
 
     function addListItem(pokemon) {
-        let list = document.querySelector('.list');
+        let list = document.querySelector('.list-group');
         let listItem = document.createElement('li');
-        let button = document.createElement('button');
+        listItem.classList.add('list-group-item');
 
+        let button = document.createElement('button');
+        button.classList.add('btn', 'btn-primary');
         button.innerText = pokemon.name;
+        button.setAttribute('data-toggle', 'modal');
+        button.setAttribute('data-target', '#myModal');
+
         button.addEventListener('click', function () {
             showDetails(pokemon);
         });
@@ -60,54 +65,34 @@ let pokemonRepository = (function () {
     }
 
     function showModal(name, height, image) {
-      let modalContainer = document.querySelector('#modal-container');
-      let imageContainer = document.querySelector('#image-container');
-
-      let modal = document.createElement('div');
+      let modal = document.querySelector('.modal-content');
       modal.classList.add('modal');
+      modal.innerHTML = '';
+
+      let modalContainer = document.querySelector('.modal-dialog');
+      let imageContainer = document.createElement('div');
 
       let closeButtonElement = document.createElement('button');
-      closeButtonElement.classList.add('modal-close');
+      closeButtonElement.classList.add('close');
       closeButtonElement.innerText = 'Close';
-      closeButtonElement.addEventListener('click', hideModal);
+      closeButtonElement.setAttribute('data-dismiss', 'modal');
+      closeButtonElement.setAttribute('aria-label', 'Close');
 
       let nameElement = document.createElement('h1');
       nameElement.innerText = name;
 
       let imageElement = document.createElement('img');
       imageElement.src = image;
+      imageContainer.appendChild(imageElement);
 
       let heightElement = document.createElement('p');
       heightElement.innerText = 'Height: ' + height;
 
       modal.appendChild(closeButtonElement);
       modal.appendChild(nameElement);
-      modal.appendChild(imageElement);
+      modal.appendChild(imageContainer);
       modal.appendChild(heightElement);
       modalContainer.appendChild(modal);
-
-      modalContainer.classList.add('is-visible');
-
-      modalContainer.addEventListener('click', (e) => {
-        let target = e.target;
-        if (target === modalContainer) {
-          hideModal();
-        }
-      });
-    }
-
-    function hideModal() {
-      let modalContainer = document.querySelector('#modal-container');
-      modalContainer.classList.remove('is-visible');
-
-      window.addEventListener('keydown', (e) => {
-        let modalContainer = document.querySelector('#modal-container');
-        if (e.key === 'Escape' && modalContainer.classList.contains('is-visible')) {
-          hideModal();
-        }
-      });
-
-      modalContainer.innerHTML = '';
     }
 
     return {
